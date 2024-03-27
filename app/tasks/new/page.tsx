@@ -27,6 +27,18 @@ function NewTaskPage() {
   });
   const router = useRouter();
 
+  const onSubmit = handleSubmit(async (data) => {
+    try {
+      setIsLoading(true);
+      await axios.post("/api/tasks", data);
+      router.push("/tasks");
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      setError("An unexpected error occured");
+    }
+  });
+
   return (
     <div className="max-w-xl">
       {error && (
@@ -34,20 +46,7 @@ function NewTaskPage() {
           <Callout.Text>{error}</Callout.Text>
         </Callout.Root>
       )}
-      <form
-        className="space-y-3"
-        onSubmit={handleSubmit(async (data) => {
-          try {
-            setIsLoading(true);
-            await axios.post("/api/tasks", data);
-            router.push("/tasks");
-            setIsLoading(false);
-          } catch (error) {
-            setIsLoading(false);
-            setError("An unexpected error occured");
-          }
-        })}
-      >
+      <form className="space-y-3" onSubmit={onSubmit}>
         <TextField.Root placeholder="Tasks" {...register("title")}>
           <TextField.Slot></TextField.Slot>
         </TextField.Root>
