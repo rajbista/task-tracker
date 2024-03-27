@@ -6,7 +6,6 @@ import { FaTasks } from "react-icons/fa";
 
 const Navbar = () => {
   const currentPath = usePathname();
-  console.log("__", currentPath);
   const links = [
     { label: "Dashboard", href: "/" },
     { label: "Tasks", href: "/tasks" },
