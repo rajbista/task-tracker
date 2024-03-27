@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { crateTasksSchema } from "@/app/validationSchemas";
 import { z } from "zod";
+import ErrorMessage from "@/app/components/ErrorMessage";
 
 type TaskForm = z.infer<typeof crateTasksSchema>;
 
@@ -45,7 +46,7 @@ function NewTaskPage() {
         <TextField.Root placeholder="Tasks" {...register("title")}>
           <TextField.Slot></TextField.Slot>
         </TextField.Root>
-        {errors?.title && <Text color="red">{errors.title.message}</Text>}
+        <ErrorMessage>{errors.title?.message}</ErrorMessage>
         <Controller
           name="description"
           control={control}
@@ -53,13 +54,9 @@ function NewTaskPage() {
             <SimpleMDE placeholder="Description" {...field} />
           )}
         />
-        {errors?.description && (
-          <Text color="red" as="p">
-            {errors.description.message}
-          </Text>
-        )}
+        <ErrorMessage>{errors.description?.message}</ErrorMessage>
 
-        <Button disabled={!isValid}>Submit New Task</Button>
+        <Button disabled={isValid}>Submit New Task</Button>
       </form>
     </div>
   );
