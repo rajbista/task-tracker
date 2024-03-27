@@ -1,5 +1,5 @@
 "use client";
-import { Button, Callout, Text, TextField } from "@radix-ui/themes";
+import { Button, Callout, Spinner, Text, TextField } from "@radix-ui/themes";
 import React, { useState } from "react";
 import SimpleMDE from "react-simplemde-editor";
 import "easymde/dist/easymde.min.css";
@@ -15,6 +15,8 @@ type TaskForm = z.infer<typeof crateTasksSchema>;
 
 function NewTaskPage() {
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
   const {
     register,
     control,
@@ -36,9 +38,12 @@ function NewTaskPage() {
         className="space-y-3"
         onSubmit={handleSubmit(async (data) => {
           try {
+            setIsLoading(true);
             await axios.post("/api/tasks", data);
             router.push("/tasks");
+            setIsLoading(false);
           } catch (error) {
+            setIsLoading(false);
             setError("An unexpected error occured");
           }
         })}
@@ -56,7 +61,9 @@ function NewTaskPage() {
         />
         <ErrorMessage>{errors.description?.message}</ErrorMessage>
 
-        <Button disabled={isValid}>Submit New Task</Button>
+        <Button disabled={isLoading}>
+          Submit New Task {isLoading && <Spinner />}
+        </Button>
       </form>
     </div>
   );
